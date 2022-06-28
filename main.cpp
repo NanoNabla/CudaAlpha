@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 
     if (argc == 1)
     {
-        repeats = stoi(argv[1]);
+        repeats = std::stoi(argv[1]);
     }
 
     MPI_Init(NULL, NULL);

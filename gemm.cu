@@ -146,7 +146,7 @@ void mat_mul(int m_k_n_size, int repeats, int verbose = 0, int device = 0)
     cudaEventCreate(&stop);
 
 #ifdef SCOREP
-    SCOREP_USER_METRIC_INIT(my_local_metric, "GPU FLOPS", "FLOPS",
+    SCOREP_USER_METRIC_INIT(scorep_metrics_flops, "GPU FLOPS", "FLOPS",
                             SCOREP_USER_METRIC_TYPE_DOUBLE,
                             SCOREP_USER_METRIC_CONTEXT_GLOBAL)
 #endif
@@ -179,7 +179,7 @@ void mat_mul(int m_k_n_size, int repeats, int verbose = 0, int device = 0)
         flops = m_k_n_size * m_k_n_size * m_k_n_size / elapsed;
 
 #ifdef SCOREP
-        SCOREP_USER_METRIC_DOUBLE(flops)
+        SCOREP_USER_METRIC_DOUBLE(scorep_metrics_flops,flops)
 #endif
         if (verbose > 1)
             cout << "device: " << device " took: " << elapsed << " FLOPS: " << flops<< endl;
