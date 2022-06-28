@@ -16,6 +16,7 @@ int main(int argc, char ** argv)
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     MPI_Finalize();
-    mat_mul(rank, m_k_n_size, repeats, verbose); // TODO multinode supprot
+    mat_mul(m_k_n_size, repeats, verbose, rank); // TODO multi node support
+
     return 0;
 }

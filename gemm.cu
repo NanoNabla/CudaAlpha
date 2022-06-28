@@ -70,7 +70,7 @@ void CPU_fill_rand(float *A, int nr_rows_A, int nr_cols_A)
     }
 }
 
-void mat_mul(int device, int m_k_n_size, int repeats, int verbose)
+void mat_mul(int m_k_n_size, int repeats, int verbose, int device = 0)
 {
     if (device == 0 && verbose)
         cout << "running with"
