@@ -86,7 +86,7 @@ void mat_mul(int device, int m_k_n_size, int repeats, int verbose)
     cublasStatus_t stat;
     cublasHandle_t handle;
 
-    cudaSetDevice(rank);
+    cudaSetDevice(device);
 
     checkCublas(cublasCreate(&handle));
 
