@@ -182,10 +182,8 @@ void mat_mul(int m_k_n_size, int repeats, int verbose = 0, int device = 0)
         SCOREP_USER_METRIC_DOUBLE(scorep_metrics_flops,flops)
 #endif
         if (verbose > 1)
-            cout << "device: " << device " took: " << elapsed << " FLOPS: " << flops<< endl;
+            cout << "device: " << device << " took: " << elapsed << " FLOPS: " << flops << endl;
     }
-
-    //TODO FLOPS print here
 
     //Free GPU memory
     cudaFree(d_A);
