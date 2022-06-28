@@ -1,7 +1,7 @@
 #include <mpi.h>
+#include <string>
 
 extern void mat_mul(int, int, int, int);
-
 
 int main(int argc, char **argv)
 {
@@ -10,6 +10,12 @@ int main(int argc, char **argv)
     int verbose = 1;
 
     int size, rank;
+
+    if (argc == 1)
+    {
+        repeats = stoi(argv[1]);
+    }
+
     MPI_Init(NULL, NULL);
 
     MPI_Comm_size(MPI_COMM_WORLD, &size);
