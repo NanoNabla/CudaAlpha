@@ -5,7 +5,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include <mpi.h>
+#ifdef SCOREP
+#include <SCOREP_User.h>
+#endif
 
 #include "fp16_conversion.h"
 
@@ -70,7 +72,7 @@ void CPU_fill_rand(float *A, int nr_rows_A, int nr_cols_A)
     }
 }
 
-void mat_mul(int m_k_n_size, int repeats, int verbose, int device = 0)
+void mat_mul(int m_k_n_size, int repeats, int verbose = 0, int device = 0)
 {
     if (device == 0 && verbose)
         cout << "running with"
@@ -89,8 +91,6 @@ void mat_mul(int m_k_n_size, int repeats, int verbose, int device = 0)
     cudaSetDevice(device);
 
     checkCublas(cublasCreate(&handle));
-
-    if (verbose) cout << "allocating device variables" << endl;
 
     // Allocate 3 arrays on CPU
 
@@ -145,7 +145,12 @@ void mat_mul(int m_k_n_size, int repeats, int verbose, int device = 0)
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
 
-    double sum = 0.0;
+#ifdef SCOREP
+    SCOREP_USER_METRIC_INIT(my_local_metric, "GPU FLOPS", "FLOPS",
+                            SCOREP_USER_METRIC_TYPE_DOUBLE,
+                            SCOREP_USER_METRIC_CONTEXT_GLOBAL)
+#endif
+    double flops;
     for (int rep = 0; rep < repeats; rep++)
     {
         cudaEventRecord(start, 0);
@@ -172,9 +177,13 @@ void mat_mul(int m_k_n_size, int repeats, int verbose, int device = 0)
 
         // TODO Score-P Metrik event here
         elapsed /= 1000.0f;
-        sum += elapsed;
+        flops = m_k_n_size * m_k_n_size * m_k_n_size / elapsed;
 
-        cout << elapsed << endl;
+#ifdef SCOREP
+        SCOREP_USER_METRIC_DOUBLE(flops)
+#endif
+        if (verbose > 1)
+            cout << "device: " << device " took: " << elapsed << endl;
     }
 
     //TODO FLOPS print here
